@@ -4,50 +4,62 @@ namespace app\core;
 
 class Request
 {
-    public function getpath()
+    private array $routeParams = [];
+
+    public function getMethod(): string
     {
-        $path = $_SERVER['REQUEST_URI'] ?? '/';
-        $position = strpos($path, '?') ?? false;
-        if ($position === false){
-            return  $path;
+        return strtolower($_SERVER['REQUEST_METHOD']);
+    }
+
+    public function getUrl()
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        $position = strpos($path, '?');
+        if ($position !== false) {
+            $path = substr($path, 0, $position);
         }
-        return substr($path , 0, $position);
+        return $path;
     }
 
-    public function  method()
+    public function isGet(): bool
     {
-         return strtolower($_SERVER['REQUEST_METHOD']);
+        return $this->getMethod() === 'get';
     }
 
-    public function isGet()
+    public function isPost(): bool
     {
-       return $this->method() === 'get';
+        return $this->getMethod() === 'post';
     }
 
-    public function isPost()
+    public function isDelete():bool
     {
-        return $this->method() =='post';
+        return $this->getMethod() === 'delete';
     }
 
-
-    public function getBody()
+    public function getBody(): array
     {
-            $body = [];
-            if ($this->method() === 'get') {
-                foreach ($_GET as $key => $value) {
-                    $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-
-                }
+        $data = [];
+        if ($this->isGet()) {
+            foreach ($_GET as $key => $value) {
+                $data[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
-
-            if ($this->method() === 'post') {
-                foreach ($_POST as $key => $value) {
-                    $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-                }
-
-
-            }
-            return $body;
-
         }
+        if ($this->isPost()) {
+            foreach ($_POST as $key => $value) {
+                $data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
+        }
+        return $data;
+    }
+
+    public function setRouteParams($params): Request
+    {
+        $this->routeParams = $params;
+        return $this;
+    }
+
+    public function getRouteParam($param, $default = null)
+    {
+        return $this->routeParams[$param] ?? $default;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 use app\controllers\AuthController;
+use app\controllers\PostController;
 use app\core\Application;
 use app\controllers\SitController;
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -20,8 +21,9 @@ $config= [
 $app = new Application(dirname(__DIR__), $config);
 
 $app->router->get('/', [SitController::class, 'home'] );
+$app->router->get('/posts/', [PostController::class, 'show']);
 $app->router->get('/contact',[SitController::class, 'contact'] );
-$app->router->post('/contact',[SitController::class, 'contact'] );
+$app->router->post('/contact/',[SitController::class, 'contact'] );
 $app->router->get('/about',[SitController::class,'about']);
 $app->router->get('/login',[AuthController::class,'login']);
 $app->router->get('/post',[SitController::class,'post']);
@@ -31,6 +33,9 @@ $app->router->get('/register',[AuthController::class,'register']);
 $app->router->post('/register',[AuthController::class,'register']);
 $app->router->get('/logout',[AuthController::class,'logout']);
 $app->router->get('/profile',[AuthController::class,'profile']);
+$app->router->delete('/posts/{id}',[PostController::class,'delete']);
+$app->router->get('/posts/edit/{id}', [PostController::class, 'edit']);
+$app->router->post('/posts/update', [PostController::class, 'update']);
 $app->run();
 
 

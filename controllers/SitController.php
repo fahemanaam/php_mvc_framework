@@ -20,6 +20,12 @@ class SitController extends Controller
         ];
         return $this->render('home', $params);
     }
+
+    public function posts()
+    {
+
+        return $this->render('posts');
+    }
     public function contact(Request $request, Response $response)
     {
         $contactForm = new ContactForm();

@@ -31,7 +31,6 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
 
-
             <li class="nav-item">
                 <a class="nav-link" href="/contact">Contact</a>
             </li>
@@ -40,7 +39,7 @@
             </li>
                 <?php else:?>
             <li class="nav-item">
-                <a class="nav-link" href="/post">Post</a>
+                <a class="nav-link" href="/posts">Posts</a>
             </li>
             <?php endif;?>
         </ul>

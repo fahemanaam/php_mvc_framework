@@ -72,7 +72,7 @@ class Application
         }
     }
 
-    public function login(DbModel $user)
+    public function login(DbModel $user): bool
     {
         $this->user = $user;
         $primaryKey = $user->primaryKey();
