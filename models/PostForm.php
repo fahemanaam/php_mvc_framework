@@ -1,78 +1,51 @@
 <?php
 
 namespace app\models;
-use app\core\DbModel;
-class PostForm extends DbModel
-{
-    public string  $subject ='';
-    public string $topic= '';
 
+use app\core\DbModel;
+
+ class PostForm extends DbModel
+{
+    public string $id = '';
+    public string $subject = '';
+    public string $topic = '';
+    public string $photo= '';
 
     public function rules(): array
     {
         return [
-            'subject'=>[self::RULE_REQUIRED],
-            'topic'=>[self::RULE_REQUIRED],
+            'subject' => [self::RULE_REQUIRED],
+            'topic' => [self::RULE_REQUIRED],
         ];
     }
 
-    public function tableName():string
+    public function tableName(): string
     {
-        return 'posts' ;
+        return 'posts';
     }
 
-    public function attributes():array
+    public function attributes(): array
     {
-        return['subject','topic'];
+        return ['subject','topic','photo'];
     }
 
-    public function labels():array
+    public function labels(): array
     {
         return [
-            'subject'=> 'Subject',
-            'topic'=> 'Topic4',
-
+            'subject' => 'Subject',
+            'topic' => 'Topic',
         ];
     }
-//    public function add(): bool
-//    {
-////        /return $this->save();
-//
-//    }
 
-
-    public function primaryKey(): string
+      public function index(): array
     {
-        // TODO: Implement primaryKey() method.
+        return $this->read('posts');
     }
 
-    public function index(): array
-    {
-        return $this->select('posts');
-    }
-
-    public function destroy($id)
-    {
-      $this->delete($id);
-    }
-
-    public function editPost($id): array
-    {
-        return $this->selectById('posts', $id);
-    }
-
-//    public function updatePost($id): bool
-//    {
-//      return $this->update('posts', $id);
-//
-//    }
-    public function updatePost($id, $subject, $topic): bool
-    {
-        // Установка атрибутов модели перед обновлением
-        $this->subject = $subject;
-        $this->topic = $topic;
-        return $this->update('posts', $id);
-    }
+       public function primaryKey(): string
+     {
+         return 'id';
+     }
 
 
-}
+ }

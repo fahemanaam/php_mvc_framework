@@ -33,7 +33,7 @@ class Request
 
     public function isDelete():bool
     {
-        return $this->getMethod() === 'delete';
+        return $this->getMethod() === 'get';
     }
 
     public function getBody(): array
@@ -41,23 +41,30 @@ class Request
         $data = [];
         if ($this->isGet()) {
             foreach ($_GET as $key => $value) {
-                $data[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+                // Удаление символов &#13;&#10;
+                $cleanedValue = str_replace(["\r", "\n"], '', $value);
+                $decodedValue = htmlspecialchars_decode($cleanedValue, ENT_QUOTES);
+                $filteredValue = filter_var($decodedValue, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data[$key] = htmlentities($filteredValue, ENT_QUOTES, 'UTF-8');
             }
         }
         if ($this->isPost()) {
             foreach ($_POST as $key => $value) {
-                $data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+                // Удаление символов &#13;&#10;
+                $cleanedValue = str_replace(["\r", "\n"], '', $value);
+                $decodedValue = htmlspecialchars_decode($cleanedValue, ENT_QUOTES);
+                $filteredValue = filter_var($decodedValue, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data[$key] = htmlentities($filteredValue, ENT_QUOTES, 'UTF-8');
             }
         }
+
         return $data;
     }
-
     public function setRouteParams($params): Request
     {
         $this->routeParams = $params;
         return $this;
     }
-
     public function getRouteParam($param, $default = null)
     {
         return $this->routeParams[$param] ?? $default;

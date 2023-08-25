@@ -12,6 +12,7 @@ use app\core\Model;
 
         <?php echo $form->field($model, 'subject') ?>
         <?php echo new TextareaField($model, 'topic') ?>
+<?php echo $form->field($model, 'photo')->fileField() ?>
 
 <button class="btn btn-primary" type="submit">Submit </button>
 

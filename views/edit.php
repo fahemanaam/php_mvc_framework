@@ -1,18 +1,15 @@
+<h1>Edit Post</h1>
 
-   <form action="/posts/update" method="post">
-    <h1>Edit Post</h1>
-    <?php foreach($params['edit'] as $post): ?>
-    <div class="form-group">
-        <label>Subject</label>
-        <input type="hidden" name="id" value="<?= htmlspecialchars($post['id']); ?>">
-        <input type="text" name="subject" value="<?= htmlspecialchars($post['subject']); ?>" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label>Topic</label>
-        <input type="text" name="topic" value="<?= htmlspecialchars($post['topic']); ?>" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-light">Update</button>
-    <?php endforeach; ?>
-</form>
+<?php
+/** @var $model Model */
+/** @var $form \app\core\form\Form */
 
-
+use app\core\form\TextareaField;
+use app\core\Model;
+?>
+<?php $form = \app\core\form\Form::begin('/posts', "POST")?>
+<?php echo $form->field($model, 'id')->hiddenField()?>
+<?php echo $form->field($model, 'subject') ?>
+<?php echo new TextareaField($model, 'topic') ?>
+<button class="btn btn-primary" type="submit">Update</button>
+<?php \app\core\form\Form::end()?>

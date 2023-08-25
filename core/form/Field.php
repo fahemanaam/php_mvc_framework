@@ -9,6 +9,8 @@ class Field extends BaseField
     const TYPE_TEXT = 'text';
     const TYPE_PASSWORD = 'password';
     const TYPE_FILE = 'file';
+    const TYPE_HIDDEN= 'hidden';
+
 
     /**
      * Field constructor.
@@ -32,6 +34,7 @@ class Field extends BaseField
         );
     }
 
+
     public function passwordField()
     {
         $this->type = self::TYPE_PASSWORD;
@@ -43,6 +46,13 @@ class Field extends BaseField
         $this->type = self::TYPE_FILE;
         return $this;
     }
+    public function hiddenField()
+    {
+        $this->type=self::TYPE_HIDDEN;
+        return $this;
+    }
+
+
 
 
 

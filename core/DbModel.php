@@ -21,11 +21,10 @@ abstract class DbModel extends Model
         foreach ($attributes as $attribute) {
             $statement->bindValue(":$attribute", $this->{$attribute});
         }
-        $statement->execute();
-        return true;
+       return $statement->execute();
     }
 
-    public  function select($tableName): array
+    public  function read($tableName): array
     {
         $statement = self::prepare("SELECT * FROM $tableName");
         $params =array();
@@ -37,20 +36,15 @@ abstract class DbModel extends Model
       return $params;
     }
 
-    public function selectById($table,int $id): array
+    public function selectById($table, int $id): array
     {
         $statement = self::prepare("SELECT * FROM $table WHERE id = :id");
-        $params = [];
         $statement->bindValue(":id", $id);
         $statement->execute();
 
-        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $params[$row['id']] = $row;
-        }
+        $params = $statement->fetch(\PDO::FETCH_ASSOC);
         return $params;
-
     }
-
     public function findOne($where)
     {
         $tableName = static::tableName();
@@ -65,42 +59,30 @@ abstract class DbModel extends Model
         return $statement->fetchObject(static::class);
     }
 
-    public function read()
-    {
-        $tableName = static::tableName();
-        $statement = self::prepare("SELECT * FROM $tableName");
-        $statement->execute();
-       return  $statement->fetchAll(\PDO::FETCH_ASSOC);
 
-    }
-
-    public  function delete($id)
+    public  function delete(): bool
     {
         $tableName = $this->tableName();
-        $statement= static::prepare("DELETE FROM $tableName WHERE id= :id");
-        $statement->bindValue(':id',$id);
-
-        $statement->execute();
+        $primaryKey = $this->primaryKey();
+        $statement= static::prepare("DELETE FROM $tableName WHERE $primaryKey=:$primaryKey");
+        $statement->bindValue(":$primaryKey", $this->{$primaryKey});
+        return $statement->execute();
     }
 
 
-
-    public function update($tableName,  int $id): bool
+    public function update(): bool
     {
-//        $attributes =$this->attributes();
-//        $param = implode(",", array_map(fn($attr) => "$attr = :$attr", $attributes));
-//        $statement = self::prepare("UPDATE $tableName SET $param WHERE id= :id");
-//        $statement->bindValue('id', $id);
-//       $statement->execute();
-//         return  true;
-
-
-        $attributes = $this->attributes();
+        $tableName = $this->tableName();
+        $primaryKey = $this->primaryKey();
+        $attributes = $this->Attributes();
         $param = implode(",", array_map(fn($attr) => "$attr = :$attr", $attributes));
-        $statement = self::prepare("UPDATE $tableName SET $param WHERE id=:id");
-        $statement->bindValue(':id', $id);
+
+        $statement = self::prepare("UPDATE $tableName SET $param WHERE $primaryKey=:$primaryKey");
+        $statement->bindValue(":$primaryKey", $this->{$primaryKey});
+
         foreach ($attributes as $attribute) {
             $statement->bindValue(":$attribute", $this->{$attribute});
+
         }
 
         return $statement->execute();

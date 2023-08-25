@@ -1,11 +1,27 @@
 <?php
 namespace app\controllers;
-
+use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\PostForm;
 
 class PostController extends Controller {
+
+    public function addPost(Request $request )
+    {
+        $PostForm =new PostForm();
+        if ($request->isPost()){
+            $PostForm->loadData($request->getBody());
+
+            if($PostForm->validate() && $PostForm->save()){
+                Application::$app->session->setFlash('success','Your post added successfully');
+                Application::$app->response->redirect('post');
+                $PostForm->loadData([]);
+            }
+            return $this->render('post' , ['model'=>$PostForm]);
+        }
+        return $this->render('post' , ['model'=>$PostForm]);
+    }
 
     public function show()
     {
@@ -17,53 +33,47 @@ class PostController extends Controller {
 
     public function edit(Request $request)
     {
-
-        $postModel = new PostForm();
         $id = $request->getRouteParam('id');
-        $edit = $postModel->editPost($id);
-        $this->params['edit']=$edit;
-
-     return $this->render('edit',$this->params);
+        $postModel = new PostForm();
+        if ($request->isGet()) {
+            $editData = $postModel->selectById('posts', $id);
+            $postModel->loadData($editData);
+        }
+        $this->params['model'] = $postModel;
+        return $this->render('edit', $this->params);
     }
+
     public function delete(Request $request)
     {
         $id = $request->getRouteParam('id');
-
         $postModel = new PostForm();
-        $postModel->destroy($id);
+        $postModel->{$postModel->primaryKey()} = $id;
+        if ($request->isDelete()) {
+            $postModel->delete();
+        }
         $posts = $postModel->index();
         $this->params['posts'] = $posts;
         return $this->render('posts', $this->params);
     }
 
 
-//    public function update(Request $request)
-//    {
-//        $postModel = new PostForm();
-//        if ($request->isPost())
-//        {
-//            $id = $_POST['id'];
-//            $postModel->updatePost($id);
-//            $this->params['posts'] = $postModel;
-//               }
-//      return $this->render('update', $this->params);
-//    }
 
     public function update(Request $request)
     {
         $postModel = new PostForm();
         if ($request->isPost())
         {
-            $id = $_POST['id'];
-            // Получение остальных данных из формы
-            $subject = $_POST['subject'];
-            $topic = $_POST['topic'];
-            // Передача этих данных в метод updatePost()
-            $postModel->updatePost($id, $subject, $topic);
-            $this->params['posts'] = $postModel;
+            $postModel->loadData($request->getBody());
+            if($postModel->validate() && $postModel->update()) {
+                Application::$app->session->setFlash('success', 'Your post was updated successfully');
+                Application::$app->response->redirect('posts');
+                $postModel->loadData([]);
+            }
+            return $this->render('edit', ['model' => $postModel]);
         }
-        return $this->render('update', $this->params);
+        return $this->render('posts', ['model' => $postModel]);
     }
+
 
 }
 

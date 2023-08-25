@@ -26,16 +26,16 @@ $app->router->get('/contact',[SitController::class, 'contact'] );
 $app->router->post('/contact/',[SitController::class, 'contact'] );
 $app->router->get('/about',[SitController::class,'about']);
 $app->router->get('/login',[AuthController::class,'login']);
-$app->router->get('/post',[SitController::class,'post']);
-$app->router->post('/post',[SitController::class,'post']);
+$app->router->get('/post',[PostController::class,'addPost']);
+$app->router->post('/post',[PostController::class,'addPost']);
 $app->router->post('/login',[AuthController::class,'login']);
 $app->router->get('/register',[AuthController::class,'register']);
 $app->router->post('/register',[AuthController::class,'register']);
 $app->router->get('/logout',[AuthController::class,'logout']);
 $app->router->get('/profile',[AuthController::class,'profile']);
 $app->router->delete('/posts/{id}',[PostController::class,'delete']);
-$app->router->get('/posts/edit/{id}', [PostController::class, 'edit']);
-$app->router->post('/posts/update', [PostController::class, 'update']);
+$app->router->get('/edit/{id}', [PostController::class, 'edit']);
+$app->router->post('/posts', [PostController::class, 'update']);
 $app->run();
 
 
