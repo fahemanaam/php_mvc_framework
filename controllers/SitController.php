@@ -21,11 +21,7 @@ class SitController extends Controller
         return $this->render('home', $params);
     }
 
-//    public function posts()
-//    {
-//
-//        return $this->render('posts');
-//    }
+
     public function contact(Request $request, Response $response)
     {
         $contactForm = new ContactForm();
@@ -41,22 +37,7 @@ class SitController extends Controller
        return $this->render('contact',['model'=>$contactForm]);
     }
 
-//    public function post(Request $request )
-//    {
-//        $PostForm =new PostForm();
-//        if ($request->isPost()){
-//            $PostForm->loadData($request->getBody());
-//        if($PostForm->validate() && $PostForm->save()){
-//            Application::$app->session->setFlash('success','Your post added successfully');
-//            Application::$app->response->redirect('post');
-//
-//        }
-//            return $this->render('post' , ['model'=>$PostForm]);
-//
-//
-//        }
-//        return $this->render('post' , ['model'=>$PostForm]);
-//    }
+
     public function about()
     {
         return $this->render('about' );
