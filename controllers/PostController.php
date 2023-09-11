@@ -3,9 +3,13 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\core\Session;
 use app\models\PostForm;
 
+
 class PostController extends Controller {
+
+
 
     public function addPost(Request $request )
     {
@@ -14,11 +18,9 @@ class PostController extends Controller {
             $PostForm->loadData($request->getBody());
 
             if($PostForm->validate() && $PostForm->save()){
-                Application::$app->session->setFlash('success','Your post added successfully');
-                Application::$app->response->redirect('post');
-                $PostForm->loadData([]);
+                Application::$app->session->setFlash('success', 'Операция успешна');
+                Application::$app->response->redirect('posts');
             }
-            return $this->render('post' , ['model'=>$PostForm]);
         }
         return $this->render('post' , ['model'=>$PostForm]);
     }
@@ -50,10 +52,11 @@ class PostController extends Controller {
         $postModel->{$postModel->primaryKey()} = $id;
         if ($request->isDelete()) {
             $postModel->delete();
+            Application::$app->session->setFlash('danger', 'пост успено удален');
+           Application::$app->response->redirect('posts');
+
         }
-        $posts = $postModel->index();
-        $this->params['posts'] = $posts;
-        return $this->render('posts', $this->params);
+
     }
 
 
@@ -61,19 +64,18 @@ class PostController extends Controller {
     public function update(Request $request)
     {
         $postModel = new PostForm();
-        if ($request->isPost())
-        {
+
+        if ($request->isPost()) {
             $postModel->loadData($request->getBody());
-            if($postModel->validate() && $postModel->update()) {
+
+            if ($postModel->save()) {
                 Application::$app->session->setFlash('success', 'Your post was updated successfully');
                 Application::$app->response->redirect('posts');
-                $postModel->loadData([]);
             }
-            return $this->render('edit', ['model' => $postModel]);
         }
+
         return $this->render('posts', ['model' => $postModel]);
     }
-
 
 }
 

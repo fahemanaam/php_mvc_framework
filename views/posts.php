@@ -29,10 +29,16 @@ $this->title ='Posts';?>
                         Edit
                         <input type="hidden" name="id" value="<?= $item['id']; ?>">
                     </a>
-                    <a href="/posts/<?=$item['id']?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this?');">
+                    <a href="/<?=$item['id']?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this?');">
                         Delete
                         <input type="hidden" name="id" value="<?= $item['id']; ?>">
                     </a>
+                    <form class="mt-6" method="POST" action="/posts/<?= $item['id']; ?>">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+
                 <?php endif; ?>
             </td>
         </tr>

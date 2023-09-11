@@ -33,7 +33,7 @@ $app->router->get('/register',[AuthController::class,'register']);
 $app->router->post('/register',[AuthController::class,'register']);
 $app->router->get('/logout',[AuthController::class,'logout']);
 $app->router->get('/profile',[AuthController::class,'profile']);
-$app->router->delete('/posts/{id}',[PostController::class,'delete']);
+$app->router->delete('/{id}',[PostController::class,'delete']);
 $app->router->get('/edit/{id}', [PostController::class, 'edit']);
 $app->router->post('/posts', [PostController::class, 'update']);
 $app->run();

@@ -71,11 +71,10 @@
 </nav>
 
 <div class="container">
-    <?php if (Application::$app->session->getFlash('success')): ?>
-        <div class="alert alert-success">
-            <p><?php echo Application::$app->session->getFlash('success') ?></p>
-        </div>
-    <?php endif; ?>
+    <?php $FlashMessage=(Application::$app->session->getFlashMessage());
+    echo $FlashMessage;
+    ?>
+
     {{content}}
 </div>
 
